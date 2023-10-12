@@ -3,7 +3,7 @@ from fastapi import FastAPI
 app = FastAPI()
 
 def read_user(user_id):
-    with open("user_data.txt", r) as file:
+    with open("user_data.txt", "r") as file:
         for line in file:
             data = line.strip().split(",")
             if data[0] == str(user_id):
@@ -13,7 +13,7 @@ def read_user(user_id):
                     }
         return None
     
-def update_user(user_id):
+def update_user(user_id, name):
     user_data = read_user(user_id)
     if user_data is not None:
         user_data["name"] = name
