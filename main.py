@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+from connection import collection
+
 app = FastAPI()
 
 def read_user(user_id):
