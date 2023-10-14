@@ -1,63 +1,107 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException, Body, status
+from fastapi.encoders import jsonable_encoder
+from pydantic import BaseModel, EmailStr, Field
+from typing import Optional, List
 from bson import ObjectId
 from connection import collection
 
 app = FastAPI()
 
-class User(BaseModel):
-    id: int
-    name: str
-    age: int
-    description: str | None = None
-    email: str | None = None
+class PyObjectId(ObjectId):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v, context=None):
+        if not ObjectId.is_valid(v):
+            raise ValueError("Invalid objectid")
+        return ObjectId(v)
+
+    @classmethod
+    def __get_pydantic_json_schema__(cls, field_schema):
+        field_schema.update(type="string")
+
+class UserModel(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    name: str = Field(...)
+    email: EmailStr = Field(...)
+    address : str = Field(...)
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "name": "Jane Doe",
+                "email": "jdoe@example.com",
+                "address" : "Str. Long nr. 25"
+            }
+        }
+
+class UpdateUserModel(BaseModel):
+    name: Optional[str]
+    email: Optional[EmailStr]
+    address: Optional[str]
 
     class Config:
         arbitrary_types_allowed = True
-        fields = {"id": "_id"}
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "name": "Jane Doe",
+                "email": "jdoe@example.com",
+                "address" : "Str. Long nr. 25"
+            }
+        }
 
-def read_user(user : User):
-    user_data = user.model_dump()
-    try:
-        user = collection.find_one({"_id" : user.id})
-        if user:
-            return user
-        else:
-            raise HTTPException(status_code=404, detail="User not found")
-    except Exception as e:
-        #raise HTTPException(status_code=500, detail="An error occurred while processing the request")
-        print (e)
+@app.post("/", response_description="Add new student", response_model=UserModel)
+async def create_user(user: UserModel = Body(...)):
+    user = jsonable_encoder(user)
+    new_user = collection.insert_one(user)
+    created_user = collection.find_one({"_id": new_user.inserted_id})
+    return created_user
 
-def update_user(user: User, name: str, age: int):
-    existing_user = read_user(user)
-    if existing_user:
-        update_data = {"$set": {"name": name, "age": age}}
-        collection.update_one({"id": user.id}, update_data)  # Corrected query condition
-    else:
-        print ("no user found")
-        new_user = User(id = user.id, name = name, age = age)
-        collection.insert_one(new_user)
+@app.get(
+    "/", response_description="List all students", response_model=List[UserModel]
+)
+async def list_users():
+    students = collection.find()
+    return students
 
-@app.get("/")
-async def root():
-    return {"message": "Hello world!"}
+@app.get(
+    "/{id}", response_description="Get a single user", response_model=UserModel
+)
+async def show_user(id: str):
+    if (user := collection.find_one({"_id": id})) is not None:
+        return user
 
-@app.get("/users/{user_id}")
-async def get_user(user_id: int):
-#   user_id_obj = ObjectId(user_id)  # Convert the user_id string to an ObjectId
-    user_info = collection.find_one({"_id": user_id})
+    raise HTTPException(status_code=404, detail=f"User {id} not found")
 
-    return user_info
-'''   
-    if user_info:
-        return User(**user_info)  # Create a User Pydantic model instance
-    else:
-        raise HTTPException(status_code=404, detail="User not found")
-'''
-        
-@app.put("/users/{user_id}")
-async def put_user(user_id: int, data: dict):
-    name = data.get("name")
-    age = data.get("age")
-    update_user(User(id=user_id, name=name, age=age), name, age)  # Pass the ObjectId instance and the new 'name' and 'age'
-    return {"message": "User information updated"}
+@app.put("/{id}", response_description="Update a user", response_model=UserModel)
+async def update_user(id: str, user: UpdateUserModel = Body(...)):
+    user = {k: v for k, v in user.model_dump().items() if v is not None}
+
+    if len(user) >= 1:
+        update_result = collection.update_one({"_id": id}, {"$set": user})
+
+        if update_result.modified_count == 1:
+            if (
+                updated_user := collection.find_one({"_id": id})
+            ) is not None:
+                return updated_user
+
+    if (existing_user := collection.find_one({"_id": id})) is not None:
+        return existing_user
+
+    raise HTTPException(status_code=404, detail=f"User {id} not found")
+
+@app.delete("/{id}", response_description="Delete a user")
+async def delete_user(id: str):
+    delete_result = collection.delete_one({"_id": id})
+
+    if delete_result.deleted_count == 1:
+        return "already deleted"
+
+    raise HTTPException(status_code=404, detail=f"User {id} not found")
