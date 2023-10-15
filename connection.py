@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 
-db_addr = "localhost"
+db_addr = "172.19.0.5"
 db_ip = 27017
 
 
