@@ -37,7 +37,7 @@ pipeline {
         stage ('Push image') {
             steps {
                 script {
-                    docker.withRegistry(DOCKER_REGISTRY, 'DOCKERHUB_CREDENTIALS') {
+                    docker.withRegistry(DOCKER_REGISTRY, 'emagmir-dockerhub') {
                         dockerImage.push("$BUILD_NUMBER")
                         dockerImage.push('latest')
                     }
