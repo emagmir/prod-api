@@ -10,23 +10,37 @@ pipeline {
     stages {
 
         stage ('Clone repository') {
-            checkout scm
+            steps {
+                checkout scm
+            }
         }
 
         stage ('Build') {
-            dockerImage = docker.build ("$DOCKERHUB_REPO")
+            steps {
+                script {
+                    dockerImage = docker.build("$DOCKERHUB_REPO")
+                }
+            }
         }
 
         stage ('Test image') {
-            dockerImage.inside {
-                sh 'echo "All tests passed ayy lmao"'
+            steps {
+                script {
+                    dockerImage.inside {
+                        sh 'echo "All tests passed ayy lmao"'
+                    }
+                }
             }
         }
 
         stage ('Push image') {
-            docker.withRegistry (DOCKER_REGISTRY, DOCKERHUB_CREDENTIALS) {
-                dockerImage.push("$BUILD_NUMBER")
-                dockerImage.push('latest')
+            steps {
+                script {
+                    docker.withRegistry(DOCKER_REGISTRY, DOCKERHUB_CREDENTIALS) {
+                        dockerImage.push("$BUILD_NUMBER")
+                        dockerImage.push('latest')
+                    }
+                }
             }
         }
     }
