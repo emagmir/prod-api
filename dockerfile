@@ -1,5 +1,5 @@
 #Base image
-FROM python:latest
+FROM python:3-slim
 
 WORKDIR /app
 
@@ -11,6 +11,10 @@ COPY main.py .
 RUN pip install -r requirements.txt
 
 RUN pip install uvicorn
+
+HEALTHCHECK --interval=60s \
+            --timeout=5s \
+            CMD curl -f http://127.0.0.1:8000 || exit 1
 
 EXPOSE 8000
 
