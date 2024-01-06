@@ -18,6 +18,7 @@ pipeline {
         stage ('Build') {
             steps {
                 script {
+                    sh 'echo $USER'
                     dockerImage = docker.build("$DOCKERHUB_REPO")
                 }
             }
