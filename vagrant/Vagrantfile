@@ -1,16 +1,58 @@
 Vagrant.configure("2") do |config|
-    config.vm.box = "ubuntu/bionic64"
-    config.vm.hostname = "my-jenkins"
-    config.vm.network "private_network", ip: "192.168.56.2"
-    config.vm.boot_timeout = 6000
+  config.hostmanager.enabled = true 
+  config.hostmanager.manage_host = true
 
-    config.vm.network "forwarded_port", guest: 8080, host: 9000
-    
-    config.vm.provider "virtualbox" do |v|
-        v.name = "my-jenkins"
-        v.memory = 1024
-        v.cpus = 2
-      end
-      
-    config.vm.provision "shell", path: "prov-jenkins.sh"
+  config.vm.define "my_jenkins" do |my_jenkins|
+    my_jenkins.vm.box = "ubuntu/bionic64"
+    my_jenkins.vm.network "private_network", ip: "192.168.56.2"
+    my_jenkins.vm.boot_timeout = 600
+
+    my_jenkins.vm.network "forwarded_port", guest: 8080, host: 9000, auto_correct: true
+
+    my_jenkins.vm.provider "virtualbox" do |v|
+      v.name = "my-jenkins"
+      v.memory = 1024
+      v.cpus = 2
     end
+    my_jenkins.vm.hostname = "my-jenkins"
+    my_jenkins.vm.provision "shell", path: "prov-jenkins.sh"
+  end
+
+  config.vm.provision "shell", path: "prov-jenkins.sh"
+
+  config.vm.define "kubemaster" do |kubemaster|
+    kubemaster.vm.box = "ubuntu/bionic64"
+    kubemaster.vm.network "private_network", ip: "192.168.56.3"
+    kubemaster.vm.provider "virtualbox" do |vb|
+      vb.name = "kubemaster"
+      vb.memory = 2048
+      vb.cpus = 2
+    end
+    kubemaster.vm.hostname = "kubemaster"
+    kubemaster.vm.provision "shell", path: "kubemaster-init.sh"
+  end
+
+  config.vm.define "kubenode1" do |kubenode1|
+    kubenode1.vm.box = "ubuntu/bionic64"
+    kubenode1.vm.network "private_network", ip: "192.168.56.4"
+    kubenode1.vm.provider "virtualbox" do |vb|
+      vb.name = "kubenode1"
+      vb.memory = 1028
+      vb.cpus = 2
+    end
+    kubenode1.vm.hostname = "kubenode1"
+    kubenode1.vm.provision "shell", path: "kubenode1-init.sh"
+  end
+
+  config.vm.define "kubenode2" do |kubenode2|
+    kubenode2.vm.box = "ubuntu/bionic64"
+    kubenode2.vm.network "private_network", ip: "192.168.56.5"
+    kubenode2.vm.provider "virtualbox" do |vb|
+      vb.name = "kubenode2"
+      vb.memory = 1028
+      vb.cpus = 2
+    end
+    kubenode2.vm.hostname = "kubenode2"
+    kubenode2.vm.provision "shell", path: "kubenode2-init.sh"
+  end
+end

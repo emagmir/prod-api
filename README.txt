@@ -5,3 +5,6 @@ Requires only a docker desktop installed,Mongo Compass maybe, this local path wh
 --> "C:\\Program Files\\MongoDB\\Server\\6.0\\data:/data/db"
 
 ..but this should be part of default Mongo installation
+
+
+## will be updated soon
