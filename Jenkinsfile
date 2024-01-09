@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('emagmir-dockerhub')
         DOCKERHUB_REPO = "emagmir/fast-api-cicd"
         DOCKER_REGISTRY = "https://registry.hub.docker.com"
     }

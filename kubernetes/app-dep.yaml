@@ -23,4 +23,6 @@ spec:
             cpu: "500m"
         ports:
         - name: fast-api-port
-          containerPort: 
+          containerPort: 8000
+      imagePullSecrets:
+      - name: mydockerhub-secret

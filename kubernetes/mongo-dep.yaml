@@ -4,7 +4,6 @@ metadata:
   name: mongodb
   labels:
     app: mongodb
-    environment: production
 spec:
   selector:
     matchLabels:
@@ -17,10 +16,11 @@ spec:
     spec:
       containers:
       - name: mongodb
-        image: mongo
+        image: mongo:4.4
         resources:
           limits:
             memory: "128Mi"
             cpu: "500m"
         ports:
-        - containerPort: mongodb-port
+        - containerPort: 27017
+          name: mongodb-port
