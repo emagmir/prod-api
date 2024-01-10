@@ -1,10 +1,10 @@
 FASTAPI used for who knows what
 
-This will be the local deploy branch; 
-Requires only a docker desktop installed,Mongo Compass maybe, this local path where the container will be mounted:
---> "C:\\Program Files\\MongoDB\\Server\\6.0\\data:/data/db"
+Vagrant folder has files for: Jenkins VM, and a K8s cluster consisting of 3 nodes, that will be connected between them
 
-..but this should be part of default Mongo installation
+Jenkins config needs to be done and add 2 tokens:
 
+ --> git token for private repo
+ --> docker token for private image repo
 
-## will be updated soon
+Pipeline is severly lacking, but at the moment will suffice :)
