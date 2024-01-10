@@ -43,5 +43,16 @@ pipeline {
                 }
             }
         }
+
+        stage ('Deploy to k8s cluster') {
+            steps {
+                withKubeCredentials(kubectlCredentials: [[caCertificate: '', clusterName: 'dep_k8s', contextName: '', credentialsId: 'SECRET_TOKEN', namespace: 'default', serverUrl: 'https://192.168.56.3:6443']]) {
+                    script {
+                        def kubernetesDir = '/kubernetes'
+                        sh "kubectl apply -f ${kubernetesFolder}/*.yaml"
+                    }
+                }
+            }
+        }
     }
 }
