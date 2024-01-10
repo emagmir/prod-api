@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKERHUB_REPO = "emagmir/fast-api-cicd"
         DOCKER_REGISTRY = "https://registry.hub.docker.com"
+        KUBERNETES_FOLDER = 'kubernetes'
     }
 
     stages {
@@ -49,7 +50,7 @@ pipeline {
                 withKubeCredentials(kubectlCredentials: [[caCertificate: '', clusterName: 'dep_k8s', contextName: '', credentialsId: 'SECRET_TOKEN', namespace: 'default', serverUrl: 'https://192.168.56.3:6443']]) {
                     script {
                         def kubernetesDir = '/kubernetes'
-                        sh "kubectl apply -f ${kubernetesFolder}/*.yaml"
+                        sh "kubectl apply -f $KUBERNETES_FOLDER/*.yaml"
                     }
                 }
             }
