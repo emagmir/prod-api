@@ -52,7 +52,7 @@ pipeline {
                         sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'
                         sh 'ls -lrth'  
                         sh 'chmod u+x ./kubectl'
-                        sh './kubectl get nodes'
+                        sh './kubectl apply -f $KUBERNETES_FOLDER/*.yaml'
                     }
                 }
             }
