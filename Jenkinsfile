@@ -49,8 +49,9 @@ pipeline {
             steps {
                 withKubeCredentials(kubectlCredentials: [[caCertificate: '', clusterName: 'dep_k8s', contextName: '', credentialsId: 'SECRET_TOKEN', namespace: 'default', serverUrl: 'https://192.168.56.3:6443']]) {
                     script {
-                        def kubernetesDir = '/kubernetes'
-                        sh "kubectl apply -f $KUBERNETES_FOLDER/*.yaml"
+                        sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'  
+                        sh 'chmod u+x ./kubectl'
+                        sh 'kubectl apply -f $KUBERNETES_FOLDER/*.yaml'
                     }
                 }
             }
