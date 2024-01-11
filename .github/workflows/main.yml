@@ -4,7 +4,7 @@ on:
     paths:
       - ".github/workflows/main.yml"
 jobs:
-  Push image to hub:
+  PUSH_IMAGE_TO_HUB:
     runs-on: ubuntu-latest
     steps:
       - name: Code checkout
