@@ -1,5 +1,8 @@
 name: Fast-api CICD
-on: workflow_dispatch
+on:
+  push:
+    paths:
+      - ".github/workflows/main.yml"
 jobs:
   Testing:
     runs-on: ubuntu-latest
