@@ -1,6 +1,6 @@
 name: Fast-api CICD
 on:
-  push:
+  [push, workflow_dispatch]:
     paths:
       - ".github/workflows/main.yml"
 jobs:
