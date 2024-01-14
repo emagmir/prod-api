@@ -5,6 +5,6 @@ db_addr = "172.19.0.5"
 db_ip = 27017
 '''
 
-client = MongoClient("mongodb://pythonadmin:pythonadmin@docudb-fast-api.ckrpn1rvr9wq.us-east-1.docdb.amazonaws.com:27017/?tls=true&tlsCAFile=global-bundle.pem&retryWrites=false")
+client = MongoClient("mongodb://pythonadmin:pythonadmin@fast-api-docudb.cluster-ckrpn1rvr9wq.us-east-1.docdb.amazonaws.com:27017/?tls=true&tlsCAFile=global-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false")
 db = client.users
 collection = db.myusers
