@@ -1,8 +1,6 @@
 name: Fast-api CICD
-on:
-  push:
-    paths:
-      - ".github/workflows/main.yml"
+on: [push, workflow_dispatch]
+
 jobs:
   PUSH_IMAGE_TO_HUB:
     runs-on: ubuntu-latest
