@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fast-api-dep
+  labels:
+    app: fast-api-dep
+    environment: production
+spec:
+  selector:
+    matchLabels:
+      app: fast-api-dep
+  template:
+    metadata:
+      labels:
+        app: fast-api-dep
+    spec:
+      containers:
+      - name: fast-api-app
+        image: emagmir/fast-api-cicd:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - name: fast-api-port
+          containerPort: 8000
+      imagePullSecrets:
+      - name: mydockerhub-secret
