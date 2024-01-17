@@ -24,3 +24,11 @@ jobs:
         with:
           push: True
           tags: emagmir/fast-api-cicd:latest
+
+  DEPLOY:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v4
+        with:
+          ref: 'git-actions'

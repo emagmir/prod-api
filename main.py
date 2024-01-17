@@ -56,7 +56,7 @@ class UpdateUserModel(BaseModel):
             }
         }
 
-@app.post("/", response_description="Add new student", response_model=UserModel)
+@app.post("/users/", response_description="Add new student", response_model=UserModel)
 async def create_user(user: UserModel = Body(...)):
     user = jsonable_encoder(user)
     new_user = collection.insert_one(user)
@@ -64,14 +64,20 @@ async def create_user(user: UserModel = Body(...)):
     return created_user
 
 @app.get(
-    "/", response_description="List all students", response_model=List[UserModel]
+    "/users/", response_description="List all students", response_model=List[UserModel]
 )
 async def list_users():
     students = collection.find()
     return students
 
 @app.get(
-    "/{id}", response_description="Get a single user", response_model=UserModel
+    "/health", response_description="List all students"
+)
+async def list_users():
+    return "up"
+
+@app.get(
+    "/users/{id}", response_description="Get a single user", response_model=UserModel
 )
 async def show_user(id: str):
     if (user := collection.find_one({"_id": id})) is not None:
@@ -79,7 +85,7 @@ async def show_user(id: str):
 
     raise HTTPException(status_code=404, detail=f"User {id} not found")
 
-@app.put("/{id}", response_description="Update a user", response_model=UserModel)
+@app.put("/users/{id}", response_description="Update a user", response_model=UserModel)
 async def update_user(id: str, user: UpdateUserModel = Body(...)):
     user = {k: v for k, v in user.model_dump().items() if v is not None}
 
@@ -97,7 +103,7 @@ async def update_user(id: str, user: UpdateUserModel = Body(...)):
 
     raise HTTPException(status_code=404, detail=f"User {id} not found")
 
-@app.delete("/{id}", response_description="Delete a user")
+@app.delete("/users/{id}", response_description="Delete a user")
 async def delete_user(id: str):
     delete_result = collection.delete_one({"_id": id})
 
