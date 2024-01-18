@@ -1,6 +1,13 @@
 name: Fast-api CICD
 on: [push, workflow_dispatch]
 
+env:
+  AWS_REGION: us-east-1
+  ECS_SERVICE: fast-api-svc
+  ECS_CLUSTER: fast-api-cluster-ec2
+  ECS_TASK_DEFINITION: aws-files/taskdeffile.json
+  CONTAINER_NAME: fast-api-cont
+
 jobs:
   PUSH_IMAGE_TO_HUB:
     runs-on: ubuntu-latest
@@ -26,9 +33,41 @@ jobs:
           tags: emagmir/fast-api-cicd:latest
 
   DEPLOY:
+    needs: PUSH_IMAGE_TO_HUB
     runs-on: ubuntu-latest
     steps:
       - name: Code checkout
         uses: actions/checkout@v4
         with:
           ref: 'git-actions'
+
+      - name: Docker Buildx Pull or Build
+        uses: djbender/docker-buildx-pull-or-build@v0.3
+        with:
+          docker_username: ${{ secrets.DOCKERHUB_USERNAME }}
+          docker_password: ${{ secrets.DOCKERHUB_TOKEN }}
+          dockerfile: dockerfile
+          image: emagmir/fast-api-cicd:latest
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: $ {{ env.AWS_REGION }}
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: $ {{ env.CONTAINER_NAME }}
+          image: emagmir/fast-api-cicd:latest
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: $ {{ env.ECS_SERVICE }}
+          cluster: $ {{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true        
