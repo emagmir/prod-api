@@ -1,4 +1,4 @@
-name: Kube Fast-API
+name: TF EKS CI/CD
 on: [push, workflow_dispatch]
 env:
   AWS_REGION: us-east-1
