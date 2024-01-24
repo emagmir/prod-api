@@ -1,5 +1,5 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:581579435423:task-definition/fast-api-ec2-tdef:7",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:581579435423:task-definition/fast-api-ec2-tdef:9",
     "containerDefinitions": [
         {
             "name": "fast-api-cont",
@@ -34,7 +34,7 @@
     "taskRoleArn": "arn:aws:iam::581579435423:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::581579435423:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    "revision": 7,
+    "revision": 9,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -77,7 +77,7 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-01-15T20:56:46.923Z",
+    "registeredAt": "2024-01-18T14:19:39.082Z",
     "registeredBy": "arn:aws:iam::581579435423:user/itadmin",
     "tags": []
 }

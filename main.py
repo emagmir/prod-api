@@ -74,7 +74,7 @@ async def list_users():
     "/health", response_description="List all students"
 )
 async def list_users():
-    return "i swear it worked on my pc"
+    return "i swear it worked on my pc / asta e pt tudor"
 
 @app.get(
     "/users/{id}", response_description="Get a single user", response_model=UserModel
