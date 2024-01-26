@@ -2,6 +2,10 @@ name: TF EKS CI/CD
 on: [push, workflow_dispatch]
 env:
   AWS_REGION: us-east-1
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  BUCKET_TF_STATE: ${{ secrets.BUCKET_TF_STATE }}
+  EKS_CLUSTER: fast-api-eks
 
 jobs:
   BUILD_AND_PUBLISH:
@@ -13,14 +17,4 @@ jobs:
           ref: 'kube-git-actions'
 
       - name: Upload image to ECR
-        uses: appleboy/docker-ecr-action@master
-        with:
-          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          registry: ${{ secrets.AWS_REGISTRY }}
-          repo: fast-api-ecr
-          region: ${{ env.AWS_REGION }}
-          tags: latest,${{ github.run_number }}
-          daemon_off: false
-          dockerfile: ./dockerfile
-          context: ./
+        uses: 
