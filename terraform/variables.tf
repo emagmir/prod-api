@@ -5,7 +5,7 @@ variable "region" {
 }
 
 variable "clusterName" {
-    description = "Name of EKS cluster"
-    type = "string"
-    default = "fast-api-eks"
+  description = "Name of EKS cluster"
+  type        = string
+  default     = "fast-api-eks"
 }
