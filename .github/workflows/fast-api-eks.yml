@@ -42,5 +42,5 @@ jobs:
           region: ${{ env.AWS_REGION }}
           tags: latest,${{ github.run_number }}
           daemon_off: false
-          dockerfile: ./dockerfile
-          context: ./
+          dockerfile: ./fast-app/dockerfile
+          context: ./fast-app/
