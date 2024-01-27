@@ -1,0 +1,46 @@
+name: FAST API DEP
+on:
+  push:
+    branches:
+      - "tf-eks-git-actions"
+    paths:
+      - fast-app/**
+  workflow_dispatch:
+    branches:
+      - "tf-eks-git-actions"
+
+env:
+  AWS_REGION: us-east-1
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  BUCKET_TF_STATE: ${{ secrets.BUCKET_TF_STATE }}
+  EKS_CLUSTER: fast-api-eks
+  AWS_REGISTRY: ${{ secrets.AWS_REGISTRY }}
+  ECR_REPOSITORY: fast-api-tf
+
+jobs:
+  IMAGE_BUILD:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./fast-app
+
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v4
+        with:
+          ref: 'tf-eks-git-actions'
+
+      - name: Upload image to ECR
+        uses: appleboy/docker-ecr-action@master
+        with:
+          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          registry: ${{ secrets.AWS_REGISTRY }}
+          repo: $ {{ env.ECR_REPOSITORY}}
+          region: ${{ env.AWS_REGION }}
+          tags: latest,${{ github.run_number }}
+          daemon_off: false
+          dockerfile: ./dockerfile
+          context: ./
