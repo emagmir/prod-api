@@ -6,8 +6,6 @@ on:
     paths:
       - fast-app/**
   workflow_dispatch:
-    branches:
-      - "tf-eks-git-actions"
 
 env:
   AWS_REGION: us-east-1
