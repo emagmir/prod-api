@@ -160,3 +160,12 @@ sudo kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8
 sleep 60
 sudo cat /tmp/kubeadm_out.log | grep -A1 'kubeadm join' > /vagrant/cltjoincommand.sh
 sudo chmod +x /vagrant/cltjoincommand.sh
+
+
+#install helm
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+
+#also tree for funsies
+sudo apt install tree

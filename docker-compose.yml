@@ -14,7 +14,7 @@ services:
 
   fastapi-app:
     container_name: fastapi-app
-    image: fastapi-app
+    image: emagmir/fast-api-cicd
     networks:
       api-prod:
     ports:

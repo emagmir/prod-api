@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-docker-creds
+  namespace: default
+data:
+  .dockerconfigjson: teststring
+type: kubernetes.io/dockerconfigjson

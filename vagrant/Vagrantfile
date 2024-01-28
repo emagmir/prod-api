@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
     my_jenkins.vm.provision "shell", path: "prov-jenkins.sh"
   end
 
-  config.vm.provision "shell", path: "prov-jenkins.sh"
+  #config.vm.provision "shell", path: "prov-jenkins.sh"
 
   config.vm.define "kubemaster" do |kubemaster|
     kubemaster.vm.box = "ubuntu/bionic64"
