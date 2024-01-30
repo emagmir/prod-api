@@ -9,6 +9,7 @@ resource "aws_docdb_cluster" "docdb" {
   port                            = 27017
   db_cluster_parameter_group_name = aws_docdb_cluster_parameter_group.no-tls.name
   vpc_security_group_ids          = [aws_security_group.allow_only_ec2.id]
+  availability_zones = module.vpc.azs
 }
 
 resource "aws_docdb_cluster_instance" "cluster_instances" {
