@@ -28,13 +28,10 @@ module "vpc" {
 
 }
 
-locals {
-  private_subnet_ids = [for i, cidr in module.vpc.private_subnets : module.vpc.private_subnets[i].id]
-}
 
 resource "aws_docdb_subnet_group" "test_dubnet_group" {
   name       = "main"
-  subnet_ids = local.private_subnet_ids
+  subnet_ids = module.vpc.private_subnets
 
   tags = {
     Name = "My docdb subnet group"
