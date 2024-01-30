@@ -23,4 +23,20 @@ module "vpc" {
     "kubernetes.io/cluster/${local.cluster_name}" = "shared"
     "kubernetes.io/role/internal-elb"             = 1
   }
+
+  create_database_subnet_group = true
+
+}
+
+locals {
+  private_subnet_ids = [for i, cidr in module.vpc.private_subnets : module.vpc.private_subnets[i].id]
+}
+
+resource "aws_docdb_subnet_group" "test_dubnet_group" {
+  name       = "main"
+  subnet_ids = local.private_subnet_ids
+
+  tags = {
+    Name = "My docdb subnet group"
+  }
 }
