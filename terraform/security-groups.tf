@@ -34,11 +34,11 @@ resource "aws_security_group" "allow_only_ec2" {
 
 
 resource "aws_security_group_rule" "allow_ingress_from_instance" {
-  type              = "ingress"
-  from_port         = 0
-  to_port           = 65535
-  protocol          = "tcp"
-  security_group_id = aws_security_group.allow_only_ec2.id
+  type                     = "ingress"
+  from_port                = 0
+  to_port                  = 65535
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.allow_only_ec2.id
   source_security_group_id = aws_security_group.ssh_from_home.id
 }
 

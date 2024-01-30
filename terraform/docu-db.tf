@@ -1,14 +1,14 @@
 resource "aws_docdb_cluster" "docdb" {
-  cluster_identifier      = "my-docdb-cluster"
-  engine                  = "docdb"
-  master_username         = "pythonadmin"
-  master_password         = "pythonadmin"
-  backup_retention_period = 1
-  preferred_backup_window = "07:00-09:00"
-  skip_final_snapshot     = true
-  port                    = 27017
+  cluster_identifier              = "my-docdb-cluster"
+  engine                          = "docdb"
+  master_username                 = "pythonadmin"
+  master_password                 = "pythonadmin"
+  backup_retention_period         = 1
+  preferred_backup_window         = "07:00-09:00"
+  skip_final_snapshot             = true
+  port                            = 27017
   db_cluster_parameter_group_name = aws_docdb_cluster_parameter_group.no-tls.name
-  vpc_security_group_ids  = [aws_security_group.allow_only_ec2.id]
+  vpc_security_group_ids          = [aws_security_group.allow_only_ec2.id]
 }
 
 resource "aws_docdb_cluster_instance" "cluster_instances" {
