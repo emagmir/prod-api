@@ -111,3 +111,4 @@ async def delete_user(id: str):
         return "already deleted"
 
     raise HTTPException(status_code=404, detail=f"User {id} not found")
+#
