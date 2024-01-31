@@ -20,3 +20,4 @@ resource "aws_route53_record" "private-docu-endpoint" {
   set_identifier = "dev"
   records        = [aws_docdb_cluster.docdb.endpoint]
 }
+#
