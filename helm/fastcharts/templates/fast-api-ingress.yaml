@@ -14,6 +14,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: fast-api-port-svc
+            name: fast-api-np
             port:
               number: 30008
