@@ -1,0 +1,32 @@
+name: FAST API DEP
+on:
+  push:
+    branches:
+      - "tf-eks-git-actions"
+    paths:
+      - fast-app/**
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  BUCKET_TF_STATE: ${{ secrets.BUCKET_TF_STATE }}
+  EKS_CLUSTER: fast-api-eks
+  AWS_REGISTRY: ${{ secrets.AWS_REGISTRY }}
+  ECR_REPOSITORY: fast-api-tf
+
+jobs:
+  IMAGE_BUILD:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./fast-app
+
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v4
+
+      - name: Get Kube config file
+        run: echo 'dobi-kurwa'
