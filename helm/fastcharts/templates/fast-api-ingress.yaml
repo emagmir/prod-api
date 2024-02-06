@@ -1,19 +1,23 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: fast-api-ingress
+  name: fast-api-lb
+  namespace: default
   annotations:
-    nginx.ingress.kubernetes.io/use-regex: "true"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/inbound-cidrs: 86.121.90.68/32
+    alb.ingress.kubernetes.io/tags: Environment=dev,Team=test
+    alb.ingress.kubernetes.io/healthcheck-path: /health
 spec:
-  ingressClassName: nginx
+  ingressClassName: alb
   rules:
-  - host: api.kubemaster.netopsfusion.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: fast-api-np
-            port:
-              number: 30008
+    - host: api.kubemaster.netopsfusion.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fast-api-dep
+                port:
+                  number: 8000

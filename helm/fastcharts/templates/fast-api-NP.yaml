@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: fast-api-np
+  name: fast-api-dep
 spec:
   selector:
     app: fast-api-dep

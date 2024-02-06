@@ -33,13 +33,22 @@ resource "aws_security_group" "allow_only_ec2" {
 }
 
 
-resource "aws_security_group_rule" "allow_ingress_from_instance" {
+resource "aws_security_group_rule" "allow_ingress_from_node_group" {
   type                     = "ingress"
   from_port                = 0
   to_port                  = 65535
   protocol                 = "tcp"
   security_group_id        = aws_security_group.allow_only_ec2.id
-  source_security_group_id = aws_security_group.ssh_from_home.id
+  source_security_group_id = module.eks.node_security_group_id
+}
+
+resource "aws_security_group_rule" "allow_ingress_from_cluster" {
+  type                     = "ingress"
+  from_port                = 0
+  to_port                  = 65535
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.allow_only_ec2.id
+  source_security_group_id = module.eks.cluster_security_group_id
 }
 
 resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4_docudb" {
