@@ -5,7 +5,7 @@ metadata:
   namespace: default
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/inbound-cidrs: 86.121.90.68/32
+    #alb.ingress.kubernetes.io/inbound-cidrs: ip if neccesary
     alb.ingress.kubernetes.io/tags: Environment=dev,Team=test
     alb.ingress.kubernetes.io/healthcheck-path: /health
 spec:
