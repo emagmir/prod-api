@@ -1,13 +1,13 @@
-**Fast-API CRUD Application with MongoDB**
+#Fast-API CRUD Application with MongoDB
 
 Welcome to my Fast-API CRUD application repository! 
 Main purpose of this app is not the code itself, which is minimalistic. but rather how to create different CI/CD pipelines and how to deploy it on various environments.
 
-**Overview**
+##Overview
 
 This application offers basic CRUD functionalities, allowing users to interact with data stored in a MongoDB database. 
 
-**Features**
+##Features
 
 - **Fast-API Framework**: Leveraging Fast-API for high-performance API development.
 - **MongoDB Integration**: Utilizing MongoDB for data storage and retrieval.
