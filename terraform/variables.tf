@@ -9,3 +9,9 @@ variable "clusterName" {
   type        = string
   default     = "fast-api-ecs-cluster"
 }
+
+variable "serviceName" {
+    description = "Fast-api service name"
+    type = string
+    default = "fast-api-cont"
+}
