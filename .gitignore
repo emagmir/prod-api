@@ -1,3 +1,6 @@
 vagrant/.vagrant
 vagrant/ubuntu-*
 terraform/.terraform
+terraform/*.lock.hcl
+# Byte-compiled / optimized / DLL files
+__pycache__

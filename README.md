@@ -1,4 +1,4 @@
-FASTAPI used for who knows what
+# Fast-API CRUD Application with MongoDB
 
 This branch will have 2 github actions workflows:
 
@@ -18,7 +18,7 @@ Using Helm provider, and a few other resources that will allow the IAM to use th
 A few annotations were made, for healthcheck path, and allowed IP in ingress security group (currently my personal IP):
 
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/inbound-cidrs: 86.121.90.68/32
+    alb.ingress.kubernetes.io/inbound-cidrs: 
     alb.ingress.kubernetes.io/tags: Environment=dev,Team=test
     alb.ingress.kubernetes.io/healthcheck-path: /health
 
