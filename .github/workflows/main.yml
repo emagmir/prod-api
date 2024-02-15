@@ -1,4 +1,4 @@
-name: Fast-api CICD
+name: Fast-api ECS CICD
 on: [push, workflow_dispatch]
 
 env:
@@ -7,7 +7,7 @@ env:
   ECS_CLUSTER: fast-api-cluster-ec2
   ECS_TASK_DEFINITION: aws-files/taskdeffile.json
   CONTAINER_NAME: fast-api-cont
-
+"""
 jobs:
   PUSH_IMAGE_TO_HUB:
     runs-on: ubuntu-latest
@@ -70,4 +70,5 @@ jobs:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true        
+          wait-for-service-stability: true
+"""     

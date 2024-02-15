@@ -10,7 +10,7 @@ resource "aws_security_group" "ssh_from_home" {
 
 resource "aws_vpc_security_group_ingress_rule" "allow_ssh_home" {
   security_group_id = aws_security_group.ssh_from_home.id
-  cidr_ipv4         = "188.247.226.197/32"
+  cidr_ipv4         = "my ip"
   from_port         = 22
   ip_protocol       = "tcp"
   to_port           = 22
