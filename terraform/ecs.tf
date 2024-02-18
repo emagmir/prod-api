@@ -1,4 +1,4 @@
-resource "aws_ecs_cluster" "ecs-cluster" {
+resource "aws_ecs_cluster" "ecs_cluster" {
   name = var.clusterName
 
   setting {
@@ -9,23 +9,91 @@ resource "aws_ecs_cluster" "ecs-cluster" {
 
 
 
-resource "aws_ecs_service" "mongo" {
-  name            = var.serviceName
-  cluster         = aws_ecs_cluster.ecs-cluster.id
-  task_definition = aws_ecs_task_definition.mongo.arn
-  desired_count   = 3
-  iam_role        = aws_iam_role.foo.arn
-  depends_on      = [aws_iam_role_policy.foo]
+resource "aws_ecs_service" "ecs_service" {
+  name            = "my-ecs-service"
+  cluster         = aws_ecs_cluster.ecs_cluster.id
+  task_definition = aws_ecs_task_definition.ecs_task_definition.arn
+  desired_count   = 1
 
+  network_configuration {
+    subnets         = [aws_subnet.subnet.id, aws_subnet.subnet2.id]
+    security_groups = [aws_security_group.security_group.id]
+  }
+
+  force_new_deployment = true
+  placement_constraints {
+    type = "distinctInstance"
+  }
+
+  triggers = {
+    redeployment = timestamp()
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = aws_ecs_capacity_provider.ecs_capacity_provider.name
+    weight            = 100
+  }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.foo.arn
-    container_name   = "mongo"
-    container_port   = 8080
+    target_group_arn = aws_lb_target_group.ecs_tg.arn
+    container_name   = "fast-api-cont-2"
+    container_port   = 8000
   }
 
-  placement_constraints {
-    type       = "memberOf"
-    expression = "attribute:ecs.availability-zone in [us-west-2a, us-west-2b]"
+  depends_on = [aws_autoscaling_group.ecs_asg]
+}
+
+resource "aws_ecs_capacity_provider" "ecs_capacity_provider" {
+  name = "ec2-cap-prov"
+
+  auto_scaling_group_provider {
+    auto_scaling_group_arn = aws_autoscaling_group.ecs_asg.arn
+
+    managed_scaling {
+      maximum_scaling_step_size = 1000
+      minimum_scaling_step_size = 1
+      status                    = "ENABLED"
+      target_capacity           = 1
+    }
   }
+}
+
+resource "aws_ecs_cluster_capacity_providers" "example" {
+  cluster_name = aws_ecs_cluster.ecs_cluster.name
+
+  capacity_providers = [aws_ecs_capacity_provider.ecs_capacity_provider.name]
+
+  default_capacity_provider_strategy {
+    base              = 1
+    weight            = 100
+    capacity_provider = aws_ecs_capacity_provider.ecs_capacity_provider.name
+  }
+}
+
+resource "aws_ecs_task_definition" "ecs_task_definition" {
+  family             = "my-ecs-task"
+  network_mode       = "awsvpc"
+  execution_role_arn = "arn:aws:iam::581579435423:role/ecsTaskExecutionRole"
+  cpu                = 256
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
+
+  container_definitions = jsonencode([
+    {
+      name      = "fast-api-cont-2"
+      image     = "emagmir/fast-api-cicd:latest"
+      cpu       = 256
+      memory    = 512
+      essential = true
+      portMappings = [
+        {
+          containerPort = 8000
+          hostPort      = 8000
+          protocol      = "tcp"
+        }
+      ]
+    }
+  ])
 }

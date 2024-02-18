@@ -1,37 +1,53 @@
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "5.1.2"
-
-  name = "fast-api-eks-vpc"
-
-  cidr = "172.20.0.0/16"
-  azs  = slice(data.aws_availability_zones.available.names, 0, 3)
-
-  private_subnets = ["172.20.1.0/24", "172.20.2.0/24", "172.20.3.0/24"]
-  public_subnets  = ["172.20.4.0/24", "172.20.5.0/24", "172.20.6.0/24"]
-
-  enable_nat_gateway   = true
-  single_nat_gateway   = true
+resource "aws_vpc" "ecs_vpc" {
+  cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
-
-  public_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
-    "kubernetes.io/role/elb"                      = 1
+  tags = {
+    name = "main"
   }
-
-  private_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
-    "kubernetes.io/role/internal-elb"             = 1
-  }
-
-  create_database_subnet_group = true
-
 }
 
+resource "aws_subnet" "subnet" {
+  vpc_id                  = aws_vpc.ecs_vpc.id
+  cidr_block              = cidrsubnet(aws_vpc.ecs_vpc.cidr_block, 8, 1)
+  map_public_ip_on_launch = true
+  availability_zone       = "us-east-1a"
+}
+
+resource "aws_subnet" "subnet2" {
+  vpc_id                  = aws_vpc.ecs_vpc.id
+  cidr_block              = cidrsubnet(aws_vpc.ecs_vpc.cidr_block, 8, 2)
+  map_public_ip_on_launch = true
+  availability_zone       = "us-east-1b"
+}
+
+resource "aws_internet_gateway" "internet_gateway" {
+  vpc_id = aws_vpc.ecs_vpc.id
+  tags = {
+    Name = "internet_gateway"
+  }
+}
+
+resource "aws_route_table" "route_table" {
+  vpc_id = aws_vpc.ecs_vpc.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.internet_gateway.id
+  }
+}
+
+resource "aws_route_table_association" "subnet_route" {
+  subnet_id      = aws_subnet.subnet.id
+  route_table_id = aws_route_table.route_table.id
+}
+
+resource "aws_route_table_association" "subnet2_route" {
+  subnet_id      = aws_subnet.subnet2.id
+  route_table_id = aws_route_table.route_table.id
+}
 
 resource "aws_docdb_subnet_group" "test_dubnet_group" {
   name       = "main"
-  subnet_ids = module.vpc.private_subnets
+  subnet_ids = [aws_subnet.subnet.id, aws_subnet.subnet2.id]
 
   tags = {
     Name = "My docdb subnet group"

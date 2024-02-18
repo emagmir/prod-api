@@ -3,7 +3,7 @@ resource "aws_route53_zone" "private_docudb" {
   comment = "Hopefully this will serve private endpoints"
 
   vpc {
-    vpc_id = module.vpc.vpc_id
+    vpc_id = aws_vpc.ecs_vpc.id
   }
 }
 

@@ -11,7 +11,13 @@ variable "clusterName" {
 }
 
 variable "serviceName" {
-    description = "Fast-api service name"
-    type = string
-    default = "fast-api-cont"
+  description = "Fast-api service name"
+  type        = string
+  default     = "fast-api-cont"
+}
+
+variable "vpc_cidr" {
+  description = "vpc ip block"
+  type        = string
+  default     = "10.0.0.0/16"
 }

@@ -8,7 +8,7 @@ resource "aws_docdb_cluster" "docdb" {
   skip_final_snapshot             = true
   port                            = 27017
   db_cluster_parameter_group_name = aws_docdb_cluster_parameter_group.no-tls.name
-  vpc_security_group_ids          = [aws_security_group.allow_only_ec2.id]
+  vpc_security_group_ids          = [aws_security_group.docudb_sg.id]
   db_subnet_group_name            = aws_docdb_subnet_group.test_dubnet_group.name
 }
 
