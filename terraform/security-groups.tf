@@ -3,10 +3,19 @@ resource "aws_security_group" "inbound_connections" {
   description = "Allow connections only from my ip"
   vpc_id      = aws_vpc.ecs_vpc.id
 
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   tags = {
     Name = "allow_ec2"
   }
 }
+
+# ADD OUTBOUND TRAFFIC RULE FOR INBOUND TRAFFIC GROUP!!!
 
 resource "aws_vpc_security_group_ingress_rule" "connections_from_home" {
   security_group_id = aws_security_group.inbound_connections.id

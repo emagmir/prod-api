@@ -25,10 +25,11 @@ resource "aws_launch_template" "ecs_lt" {
   }
 
   user_data = filebase64("${path.module}/ec2-creds.sh")
-
+  /*
   network_interfaces {
     associate_public_ip_address = true
   }
+  */
 }
 
 resource "aws_autoscaling_group" "ecs_asg" {
