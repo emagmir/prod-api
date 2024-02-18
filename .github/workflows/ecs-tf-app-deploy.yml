@@ -12,7 +12,7 @@ env:
   ECS_SERVICE: my-ecs-service
   ECS_CLUSTER: fast-api-ecs-cluster
   CONTAINER_NAME: fast-api-cont-2
-"""
+
 jobs:
   BUILD_AND_DEPLOY:
     runs-on: ubuntu-latest
@@ -68,7 +68,7 @@ jobs:
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
-
+"""
   DEPLOY:
     needs: PUSH_IMAGE_TO_HUB
     runs-on: ubuntu-latest
@@ -99,7 +99,5 @@ jobs:
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
-          image: emagmir/fast-api-cicd:latest
-
-      
+          image: emagmir/fast-api-cicd:latest     
 """     
