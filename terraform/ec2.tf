@@ -3,8 +3,8 @@ resource "aws_launch_template" "ecs_lt" {
   image_id      = "ami-0b789cb897e3bc975"
   instance_type = "t3.medium"
 
-  key_name = "work-git-actions"
-  #vpc_security_group_ids = [aws_security_group.ssh_from_home.id]
+  key_name               = "work-git-actions"
+  vpc_security_group_ids = [aws_security_group.security_group.id]
   iam_instance_profile {
     name = "ecsInstanceRole"
   }
