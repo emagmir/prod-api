@@ -85,6 +85,7 @@ async def show_user(id: str):
 
     raise HTTPException(status_code=404, detail=f"User {id} not found")
 
+
 @app.put("/users/{id}", response_description="Update a user", response_model=UserModel)
 async def update_user(id: str, user: UpdateUserModel = Body(...)):
     user = {k: v for k, v in user.model_dump().items() if v is not None}
