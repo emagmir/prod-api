@@ -1,3 +1,4 @@
 vagrant/.vagrant
 vagrant/ubuntu-*
 __pycache__
+terraform
