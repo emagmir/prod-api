@@ -11,7 +11,6 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   BUCKET_TF_STATE: ${{ secrets.ECS_BUCKET_TF_STATE }}
-  EKS_CLUSTER: fast-api-ecs-cluster
 
 jobs:
   Terraform_code:
