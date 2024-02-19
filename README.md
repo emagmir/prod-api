@@ -18,7 +18,7 @@ Using Helm provider, and a few other resources that will allow the IAM to use th
 A few annotations were made, for healthcheck path, and allowed IP in ingress security group (currently my personal IP):
 
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/inbound-cidrs: 
+    alb.ingress.kubernetes.io/inbound-cidrs: 0.0.0.0/0
     alb.ingress.kubernetes.io/tags: Environment=dev,Team=test
     alb.ingress.kubernetes.io/healthcheck-path: /health
 
