@@ -4,8 +4,17 @@ from pydantic import BaseModel, EmailStr, Field
 from typing import Optional, List
 from bson import ObjectId
 from connection import collection
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    'https://localhost:3000'
+]
+
+app.add_middleware(
+    CORSMiddleware, allow_origins=["*"]
+)
 
 class PyObjectId(ObjectId):
     @classmethod
