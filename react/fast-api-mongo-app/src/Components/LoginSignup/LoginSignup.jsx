@@ -13,22 +13,18 @@ const LoginSignup = () => {
                 <div className='underline'></div>
             </div>
             <div className='inputs'>
-                <div className='input'>
+            {action === "Login"? <div></div> : <div className='input'>
                     <label htmlFor='address' className='form-label'>
                         Name
                     </label>
                     <input type='text' />
-                </div>
-            </div>
-            <div className='inputs'>
+                </div>}
                 <div className='input'>
                     <label htmlFor='address' className='form-label'>
                         Email
                     </label>
                     <input type='email' />
-                </div>
-            </div>  
-            <div className='inputs'>
+                </div> 
                 <div className='input'>
                     <label htmlFor='address' className='form-label'>
                         Password
